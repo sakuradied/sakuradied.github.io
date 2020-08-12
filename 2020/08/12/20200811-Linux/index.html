@@ -27,7 +27,7 @@
 <meta property="og:image" content="https://i.loli.net/2020/08/12/Ygs1lka8CuqSLAF.png">
 <meta property="og:image" content="https://i.loli.net/2020/08/12/r6I92lpGtykZPfw.png">
 <meta property="article:published_time" content="2020-08-12T07:25:18.000Z">
-<meta property="article:modified_time" content="2020-08-12T07:27:21.121Z">
+<meta property="article:modified_time" content="2020-08-12T07:30:22.696Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://i.loli.net/2020/08/11/BO6gvqVytRel4nr.png">
@@ -173,7 +173,8 @@
 <ul>
 <li>Building MySQL with nonstandard options may lead to reduced functionality, performance, or security.  </li>
 </ul>
-<h3 id="编译安装cmake3"><a href="#编译安装cmake3" class="headerlink" title="编译安装cmake3"></a>编译安装cmake3</h3><p><code>./configure --prefix=/usr/local/cmake #--prefix= 编译的时候用来指定程序存放路径 。 make &amp;&amp; make install</code><br>需要等待较长时间</p>
+<h3 id="编译安装cmake3"><a href="#编译安装cmake3" class="headerlink" title="编译安装cmake3"></a>编译安装cmake3</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">./configure --prefix=/usr/local/cmake </span><br><span class="line"><span class="meta">#</span><span class="bash">--prefix= 编译的时候用来指定程序存放路径 。</span></span><br><span class="line">make &amp;&amp; make install </span><br></pre></td></tr></table></figure>
+<p>需要等待较长时间</p>
 <p>如过出现如下报错</p>
 <p><img src="https://i.loli.net/2020/08/12/sC9ThuaEPr6fGi3.png" alt="image.png"></p>
 <p>请安装OenSSL:</p>
@@ -202,7 +203,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir bld</span><br><span class="line">cd bld</span><br><span class="line">cmake ../ -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DSYSCONFDIR=/etc -DWITH_EXTRA_CHARSETS=all -DMYSQL_DATADIR=/usr/local/mysql/data -DWITH_BOOST=/root/mysql/mysql-8.0.21/boost -DFORCE_INSOURCE_BUILD=1 -DCMAKE_CXX_COMPILER=/usr/local/gcc/bin/g++ -DDEFAULT_CHARSET=utf8</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li>这里需要注意以上代码的路径选择<br>参考资料:<br><a target="_blank" rel="noopener" href="https://gitlab.kitware.com/cmake/community/-/wikis/home">https://gitlab.kitware.com/cmake/community/-/wikis/home</a><br>源代码构建完成:<br>make &amp;&amp; make install</li>
+<li>这里需要注意以上代码的路径选择<br>参考资料:<br><a target="_blank" rel="noopener" href="https://gitlab.kitware.com/cmake/community/-/wikis/home">https://gitlab.kitware.com/cmake/community/-/wikis/home</a><br>源代码构建完成,开始编译并安装:<br>make &amp;&amp; make install</li>
 </ul>
 <p><img src="https://i.loli.net/2020/08/12/27qpwOz8QcCPfRl.png" alt="img"></p>
 <p>接下来等待即可</p>
