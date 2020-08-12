@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <meta name="description" content="20200804 Linux1,为什么要创建特定的用户去运行服务,并分配特定的目录权限  一切皆是为了安全,特定的用户不能登录服务器shell,并且只有相对应的目录权限,有效的保证了服务器的运行安全,并且设定特别目录权限,可以有效的防止信息泄漏,恶意修改文件. 2,chmod,chgrp,chown区别,以及-R的用法chmod 修改文件权限 chgrp 变更文件或目录的所属群组 chown 修改">
 <meta property="og:type" content="article">
-<meta property="og:title" content="20200804 Linux">
+<meta property="og:title" content="20200804 Linux-Centos-权限与tomcat">
 <meta property="og:url" content="http://yoursite.com/2020/08/04/20200804-Linux/index.html">
 <meta property="og:site_name" content="sakuradied">
 <meta property="og:description" content="20200804 Linux1,为什么要创建特定的用户去运行服务,并分配特定的目录权限  一切皆是为了安全,特定的用户不能登录服务器shell,并且只有相对应的目录权限,有效的保证了服务器的运行安全,并且设定特别目录权限,可以有效的防止信息泄漏,恶意修改文件. 2,chmod,chgrp,chown区别,以及-R的用法chmod 修改文件权限 chgrp 变更文件或目录的所属群组 chown 修改">
@@ -22,8 +22,9 @@
 <meta property="og:image" content="https://i.loli.net/2020/08/04/WRMkjT7i3pGmIyz.png">
 <meta property="og:image" content="https://i.loli.net/2020/08/04/PWaNCbL9MktozS5.png">
 <meta property="article:published_time" content="2020-08-04T04:38:54.000Z">
-<meta property="article:modified_time" content="2020-08-04T06:09:34.930Z">
+<meta property="article:modified_time" content="2020-08-12T13:20:12.243Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="作业">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://i.loli.net/2020/08/04/Nr6DxLb3ZH8YBXM.png">
     
@@ -45,7 +46,7 @@
         
     
     <!-- title -->
-    <title>20200804 Linux</title>
+    <title>20200804 Linux-Centos-权限与tomcat</title>
     <!-- styles -->
     
 <link rel="stylesheet" href="/css/style.css">
@@ -102,16 +103,16 @@
     <div id="share" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/08/04/20200804-Linux/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://yoursite.com/2020/08/04/20200804-Linux/&text=20200804 Linux"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/08/04/20200804-Linux/&title=20200804 Linux"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/08/04/20200804-Linux/&is_video=false&description=20200804 Linux"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=20200804 Linux&body=Check out this article: http://yoursite.com/2020/08/04/20200804-Linux/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://yoursite.com/2020/08/04/20200804-Linux/&title=20200804 Linux"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://yoursite.com/2020/08/04/20200804-Linux/&title=20200804 Linux"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/08/04/20200804-Linux/&title=20200804 Linux"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://yoursite.com/2020/08/04/20200804-Linux/&title=20200804 Linux"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/08/04/20200804-Linux/&name=20200804 Linux&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://yoursite.com/2020/08/04/20200804-Linux/&t=20200804 Linux"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://yoursite.com/2020/08/04/20200804-Linux/&text=20200804 Linux-Centos-权限与tomcat"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/08/04/20200804-Linux/&title=20200804 Linux-Centos-权限与tomcat"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/08/04/20200804-Linux/&is_video=false&description=20200804 Linux-Centos-权限与tomcat"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=20200804 Linux-Centos-权限与tomcat&body=Check out this article: http://yoursite.com/2020/08/04/20200804-Linux/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://yoursite.com/2020/08/04/20200804-Linux/&title=20200804 Linux-Centos-权限与tomcat"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://yoursite.com/2020/08/04/20200804-Linux/&title=20200804 Linux-Centos-权限与tomcat"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/08/04/20200804-Linux/&title=20200804 Linux-Centos-权限与tomcat"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://yoursite.com/2020/08/04/20200804-Linux/&title=20200804 Linux-Centos-权限与tomcat"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/08/04/20200804-Linux/&name=20200804 Linux-Centos-权限与tomcat&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://yoursite.com/2020/08/04/20200804-Linux/&t=20200804 Linux-Centos-权限与tomcat"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -128,7 +129,7 @@
   <header>
     
     <h1 class="posttitle" itemprop="name headline">
-        20200804 Linux
+        20200804 Linux-Centos-权限与tomcat
     </h1>
 
 
@@ -149,6 +150,11 @@
       
 
       
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/%E4%BD%9C%E4%B8%9A/" rel="tag">作业</a>
+    </div>
+
 
     </div>
   </header>
@@ -234,16 +240,16 @@
     <div id="share-footer" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2020/08/04/20200804-Linux/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://yoursite.com/2020/08/04/20200804-Linux/&text=20200804 Linux"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/08/04/20200804-Linux/&title=20200804 Linux"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/08/04/20200804-Linux/&is_video=false&description=20200804 Linux"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=20200804 Linux&body=Check out this article: http://yoursite.com/2020/08/04/20200804-Linux/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://yoursite.com/2020/08/04/20200804-Linux/&title=20200804 Linux"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://yoursite.com/2020/08/04/20200804-Linux/&title=20200804 Linux"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/08/04/20200804-Linux/&title=20200804 Linux"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://yoursite.com/2020/08/04/20200804-Linux/&title=20200804 Linux"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/08/04/20200804-Linux/&name=20200804 Linux&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://yoursite.com/2020/08/04/20200804-Linux/&t=20200804 Linux"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://yoursite.com/2020/08/04/20200804-Linux/&text=20200804 Linux-Centos-权限与tomcat"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2020/08/04/20200804-Linux/&title=20200804 Linux-Centos-权限与tomcat"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2020/08/04/20200804-Linux/&is_video=false&description=20200804 Linux-Centos-权限与tomcat"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=20200804 Linux-Centos-权限与tomcat&body=Check out this article: http://yoursite.com/2020/08/04/20200804-Linux/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://yoursite.com/2020/08/04/20200804-Linux/&title=20200804 Linux-Centos-权限与tomcat"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://yoursite.com/2020/08/04/20200804-Linux/&title=20200804 Linux-Centos-权限与tomcat"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2020/08/04/20200804-Linux/&title=20200804 Linux-Centos-权限与tomcat"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://yoursite.com/2020/08/04/20200804-Linux/&title=20200804 Linux-Centos-权限与tomcat"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2020/08/04/20200804-Linux/&name=20200804 Linux-Centos-权限与tomcat&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://yoursite.com/2020/08/04/20200804-Linux/&t=20200804 Linux-Centos-权限与tomcat"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
