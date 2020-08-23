@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>20200804 Linux-Centos-权限与tomcat</title>
+    <url>/2020/08/04/20200804-Linux/</url>
+    <content><![CDATA[<h1 id="20200804-Linux"><a href="#20200804-Linux" class="headerlink" title="20200804 Linux"></a>20200804 Linux</h1><h2 id="1-为什么要创建特定的用户去运行服务-并分配特定的目录权限"><a href="#1-为什么要创建特定的用户去运行服务-并分配特定的目录权限" class="headerlink" title="1,为什么要创建特定的用户去运行服务,并分配特定的目录权限"></a>1,为什么要创建特定的用户去运行服务,并分配特定的目录权限</h2><p>  一切皆是为了安全,特定的用户不能登录服务器shell,并且只有相对应的目录权限,有效的保证了服务器的运行安全,并且设定特别目录权限,可以有效的防止信息泄漏,恶意修改文件.</p>
+<h2 id="2-chmod-chgrp-chown区别-以及-R的用法"><a href="#2-chmod-chgrp-chown区别-以及-R的用法" class="headerlink" title="2,chmod,chgrp,chown区别,以及-R的用法"></a>2,chmod,chgrp,chown区别,以及-R的用法</h2><p>chmod</p>
+<p>修改文件权限</p>
+<p>chgrp</p>
+<p>变更文件或目录的所属群组</p>
+<p>chown</p>
+<p>修改文件拥有者,以及拥有组</p>
+<p>加上-R是:</p>
+<p>对目前目录下的所有文件与子目录进行相同的权限变更(即以递回的方式逐个变更)</p>
+<p>不加-R</p>
+<p>针对对应文件或目录的权限进行修改</p>
+<h2 id="3-创建文件并分配指定权限"><a href="#3-创建文件并分配指定权限" class="headerlink" title="3,创建文件并分配指定权限"></a>3,创建文件并分配指定权限</h2><p><img src="https://i.loli.net/2020/08/04/Nr6DxLb3ZH8YBXM.png" alt="https://i.loli.net/2020/08/04/Nr6DxLb3ZH8YBXM.png"></p>
+<p>touch 创建文件 testttt</p>
+<p>chomod 分配权限为 所属用户读写 所属组执行  其他无权限</p>
+<h2 id="4-git服务与Tomcat"><a href="#4-git服务与Tomcat" class="headerlink" title="4,git服务与Tomcat"></a>4,git服务与Tomcat</h2><h3 id="git"><a href="#git" class="headerlink" title="git"></a>git</h3><p>yum -y  install git</p>
+<p>安装git包</p>
+<p>创建用户git并分配密码</p>
+<p><img src="https://i.loli.net/2020/08/04/VeAJFdUKRlNuQa8.png" alt="img"> </p>
+<p>su git</p>
+<p>#切换用户到git</p>
+<p>mkdir 123w</p>
+<p>#创建目录 123w</p>
+<p>git add 123w</p>
+<p>#将123w添加到git</p>
+<p> <img src="https://i.loli.net/2020/08/04/vdSNIpVkKYO1Jof.png" alt="img"></p>
+<p>Git成功</p>
+<p>搭建git服务器的时候使用里新用户git,并且可以通过修改配置文件来禁止git用户登录git服务器,同时也对文件上的相关权限做了权限设置git用户仅有git仓库目录的修改权限,从而保证了服务器系统的运行安全</p>
+<h3 id="Tomcat"><a href="#Tomcat" class="headerlink" title="Tomcat"></a>Tomcat</h3><p>采用直接下载官方文件使用 shell脚本直接运行</p>
+<p><code>wget  https://mirror.bit.edu.cn/apache/tomcat/tomcat-8/v8.5.57/bin/apache-tomcat-8.5.57.zip</code></p>
+<p><code>#下载tomcat8.0zip文件包</code></p>
+<p><code>unzip apache-tomcat-8.5.57.zip</code></p>
+<p> <code>#解压</code></p>
+<p><img src="https://i.loli.net/2020/08/04/8kDsm6f1zvqG9I5.png" alt="https://i.loli.net/2020/08/04/8kDsm6f1zvqG9I5.png"></p>
+<p>创建tomcat用户并给予tomcat目录权限</p>
+<p>切换用户到tomcat后:</p>
+<p><img src="https://i.loli.net/2020/08/04/RHAXnyb5Ia3LONi.png" alt="https://i.loli.net/2020/08/04/RHAXnyb5Ia3LONi.png"></p>
+<p>#设置bin权限为755后运行startup.sh</p>
+<p><img src="https://i.loli.net/2020/08/04/7IQO3J4RkPKUve8.png" alt="https://i.loli.net/2020/08/04/7IQO3J4RkPKUve8.png">``</p>
+<p>修改配置文件开启设置管理页面</p>
+<p><code>vim conf/tomcat-users.xml</code></p>
+<p>添加如下html代码</p>
+<p><code>&lt;role rolename=&quot;manager-gui&quot;/&gt;</code><br><code>&lt;user username=&quot;tomcat&quot; password=&quot;password&quot; roles=&quot;manager-gui&quot;/&gt;</code></p>
+<p>在 <code>&lt;/tomcat-users&gt;</code>前</p>
+<p>修改webapps/manager/META-INF/context.xml来允许其他ip访问管理页面</p>
+<p><img src="https://i.loli.net/2020/08/04/WRMkjT7i3pGmIyz.png" alt="https://i.loli.net/2020/08/04/WRMkjT7i3pGmIyz.png"></p>
+<p>注释如图代码即可</p>
+<p>重启tomcat服务器访问管理页面</p>
+<p><img src="https://i.loli.net/2020/08/04/PWaNCbL9MktozS5.png" alt="https://i.loli.net/2020/08/04/PWaNCbL9MktozS5.png"></p>
+]]></content>
+      <tags>
+        <tag>作业</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>你好世界</title>
+    <url>/2020/08/04/%E4%BD%A0%E5%A5%BD%E4%B8%96%E7%95%8C/</url>
+    <content><![CDATA[<h1 id="你好世界"><a href="#你好世界" class="headerlink" title="你好世界"></a>你好世界</h1><h3 id="关于我"><a href="#关于我" class="headerlink" title="关于我:"></a>关于我:</h3><p>sakuradied (咸鱼一条)</p>
+<p>网络安全学习中</p>
+<h3 id="关于这个博客"><a href="#关于这个博客" class="headerlink" title="关于这个博客:"></a>关于这个博客:</h3><p>建于作业所要,这个</p>
+<p>在2021年前发布的仅为自己学习中的作业或者记录</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>manjaro安装hexo</title>
+    <url>/2020/08/06/manjaro%E5%AE%89%E8%A3%85hexo/</url>
+    <content><![CDATA[<h1 id="manjaro安装Hexo"><a href="#manjaro安装Hexo" class="headerlink" title="manjaro安装Hexo"></a>manjaro安装Hexo</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"> sudo pacman -S nodejs npm</span><br><span class="line"></span><br><span class="line">#安装node.js和npm</span><br><span class="line"></span><br><span class="line">sudo npm install -g hexo --registry&#x3D;https:&#x2F;&#x2F;registry.npm.taobao.org</span><br><span class="line"></span><br><span class="line">#使用安装npm安装hexo</span><br></pre></td></tr></table></figure>
+
+<p>到此结束 (仓库都有)</p>
+]]></content>
+      <tags>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>20200811 Linux-Centos常用软件安装方式</title>
+    <url>/2020/08/12/20200811-Linux/</url>
+    <content><![CDATA[<h1 id="20200811-Linux"><a href="#20200811-Linux" class="headerlink" title="20200811 Linux"></a>20200811 Linux</h1><h2 id="yum-安装jdk"><a href="#yum-安装jdk" class="headerlink" title="yum 安装jdk"></a>yum 安装jdk</h2><p><code>yum -y  install java-1.8.0-openjdk</code></p>
+<p><img src="https://i.loli.net/2020/08/11/BO6gvqVytRel4nr.png" alt="https://i.loli.net/2020/08/11/BO6gvqVytRel4nr.png"></p>
+<hr>
+<h2 id="通过源码安装安装mysql"><a href="#通过源码安装安装mysql" class="headerlink" title="通过源码安装安装mysql"></a>通过源码安装安装mysql</h2><p>查看glibc版本号:</p>
+<p><img src="https://i.loli.net/2020/08/11/VYqDiCohWktvrlH.png" alt="image.png"></p>
+<p>从官网网页下载指定内容</p>
+<p><img src="https://i.loli.net/2020/08/11/kITKfuVh2RjpctY.png" alt="image.png"></p>
+<p>wget 下载:</p>
+<p><img src="https://i.loli.net/2020/08/11/bEMGgO5L9yCTvxU.png" alt="img"></p>
+<p>参考mysql官方帮助文档进行安装步骤确定</p>
+<p><img src="https://i.loli.net/2020/08/11/wJcnPZq7fQjFOHE.png" alt="image.png"></p>
+<p>在阅读官方文档的时候官方提示:</p>
+<ul>
+<li>Building MySQL with nonstandard options may lead to reduced functionality, performance, or security.  </li>
+</ul>
+<h3 id="编译安装cmake3"><a href="#编译安装cmake3" class="headerlink" title="编译安装cmake3"></a>编译安装cmake3</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./configure --prefix=/usr/local/cmake </span><br><span class="line"><span class="meta">#</span><span class="bash">--prefix= 编译的时候用来指定程序存放路径 。</span></span><br><span class="line">make &amp;&amp; make install </span><br></pre></td></tr></table></figure>
+<p>需要等待较长时间</p>
+<p>如过出现如下报错</p>
+<p><img src="https://i.loli.net/2020/08/12/sC9ThuaEPr6fGi3.png" alt="image.png"></p>
+<p>请安装OenSSL:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum install openssl-devel</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/08/12/GwR9qk31ZvWyQIK.png" alt="image.png"></p>
+<p>安装完成</p>
+<p>设置软链接:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ln -s /usr/local/cmake/bin/cmake /usr/bin/cmake</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://i.loli.net/2020/08/12/NsJu7I6diKxWcXk.png" alt="image.png"></p>
+<h3 id="升级gcc版本为8-3-0"><a href="#升级gcc版本为8-3-0" class="headerlink" title="升级gcc版本为8.3.0"></a>升级gcc版本为8.3.0</h3><p>mysql8.0 安装需要gcc 8.0 </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo yum install centos-release-scl</span><br><span class="line"></span><br><span class="line">sudo yum install devtoolset-8-gcc*</span><br><span class="line"></span><br><span class="line">scl enable devtoolset-8 bash</span><br></pre></td></tr></table></figure>
+
+<p>参考博客:<br><a href="https://www.cnblogs.com/jixiaohua/p/11732225.html">https://www.cnblogs.com/jixiaohua/p/11732225.html</a></p>
+<p>修改并创建g++ 8.3 的软链接</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">rm  /usr/bin/g++ </span><br><span class="line">ln -s /opt/rh/devtoolset-8/root/bin/g++  /usr/bin/g++</span><br><span class="line">ln -s /opt/rh/devtoolset-8/root/bin/g++  /usr/local/gcc/bin/g++</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="编译并安装mysql8-0"><a href="#编译并安装mysql8-0" class="headerlink" title="编译并安装mysql8.0"></a>编译并安装mysql8.0</h3><ul>
+<li>关于环境要求请参考网络资料,我这里预先准备好了基本环境</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mkdir bld</span><br><span class="line">cd bld</span><br><span class="line">cmake ../ -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DSYSCONFDIR=/etc -DWITH_EXTRA_CHARSETS=all -DMYSQL_DATADIR=/usr/local/mysql/data -DWITH_BOOST=/root/mysql/mysql-8.0.21/boost -DFORCE_INSOURCE_BUILD=1 -DCMAKE_CXX_COMPILER=/usr/local/gcc/bin/g++ -DDEFAULT_CHARSET=utf8</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>这里需要注意以上代码的路径选择<br>参考资料:<br><a href="https://gitlab.kitware.com/cmake/community/-/wikis/home">https://gitlab.kitware.com/cmake/community/-/wikis/home</a><br>源代码构建完成,开始编译并安装:<br>make &amp;&amp; make install</li>
+</ul>
+<p><img src="https://i.loli.net/2020/08/12/27qpwOz8QcCPfRl.png" alt="img"></p>
+<p>接下来等待即可</p>
+<p><img src="https://i.loli.net/2020/08/12/jsu2BSgfQKt5GNW.png" alt="image.png"></p>
+<p>编译完成后创建mysql工作目录复制启动脚本即可</p>
+<p>参考资料:</p>
+<p><a href="https://www.cnblogs.com/NanZhiHan/p/11017158.html">https://www.cnblogs.com/NanZhiHan/p/11017158.html</a></p>
+<h2 id="yum安装mysql"><a href="#yum安装mysql" class="headerlink" title="yum安装mysql"></a>yum安装mysql</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum -y  install mysql-server</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/08/12/eQ9cdFwIKVoqYJX.png" alt="image.png"></p>
+<h2 id="rpm包安装mysql"><a href="#rpm包安装mysql" class="headerlink" title="rpm包安装mysql"></a>rpm包安装mysql</h2><p>下载系统对应的rpm包</p>
+<p><a href="https://dev.mysql.com/downloads/repo/yum/">https://dev.mysql.com/downloads/repo/yum/</a></p>
+<p><img src="https://i.loli.net/2020/08/12/Ygs1lka8CuqSLAF.png" alt="image.png"></p>
+<p>使用如下命令安装:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">rpm -ivh [包文件名]</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://i.loli.net/2020/08/12/r6I92lpGtykZPfw.png" alt="image.png"></p>
+<h2 id="yum安装与源码安装区别个人理解"><a href="#yum安装与源码安装区别个人理解" class="headerlink" title="yum安装与源码安装区别个人理解"></a>yum安装与源码安装区别个人理解</h2><h3 id="yum安装"><a href="#yum安装" class="headerlink" title="yum安装"></a>yum安装</h3><p>yum安装是通过yum仓库进行检索并安装的,在使用yum时,会自动检索并安装相关依赖</p>
+<p>yum仓库,可以是由官方或者社区进行打包并发布的,其本质仍然是打包好的rpm格式包</p>
+<p>使用yum安装时会自动配置安装相关依赖,但是在centos上,官方所提供的yum仓库内的软件版本可能较老</p>
+<h3 id="rpm安装"><a href="#rpm安装" class="headerlink" title="rpm安装"></a>rpm安装</h3><p>通过rpm 安装本地或者在线的rpm包,</p>
+<p>rpm是一个软件包管理器,创建的rpm包一般由官方或社区打包而成</p>
+<p>rpm包安装时需要格外的注意相关依赖是否存在 ,一个各个版本依赖之间的关系</p>
+<p>rpm包可随心的去找自己需要的软件版本去安装并不限定与仓库是否存在,只要有人打包即可</p>
+]]></content>
+      <tags>
+        <tag>作业</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>20200812-Linux-Centos7 install LAMP</title>
+    <url>/2020/08/12/20200812-Linux-Centos7-install-LAMP/</url>
+    <content><![CDATA[<p>20200812-Linux-Centos7 install LAMP</p>
+<p><img src="https://github.com/teddysun/lamp/raw/master/conf/lamp.png" alt="LAMP"></p>
+<p>github:<a href="https://github.com/teddysun/lamp">https://github.com/teddysun/lamp</a></p>
+<p>安装环境:</p>
+<p>​                Centos7</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">yum -y install wget git</span><br><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;teddysun&#x2F;lamp.git</span><br><span class="line">cd lamp</span><br><span class="line">chmod +x *.sh</span><br><span class="line">.&#x2F;lamp.sh</span><br></pre></td></tr></table></figure>
+
+<p>执行操作命令后会出现交互页面</p>
+<p>lamp会通过您的选择,自动下载并编译你选择的环境包(等待时间较长)</p>
+<p>安装完成后返回的安装概述:</p>
+<p><img src="https://i.loli.net/2020/08/12/FQwMWlDxudzEL2A.png" alt="image.png"></p>
+<p>主页信息:</p>
+<p><img src="https://i.loli.net/2020/08/12/A4yvdtMBicQTem1.png" alt="image.png"></p>
+<p>在LAMP的主页上会显示安装完成后的相关信息,并且包括了 phpinfo 和php探针</p>
+<p><img src="https://i.loli.net/2020/08/12/Ut895pJGAPRCMSH.png" alt="image.png"></p>
+<p>phpinfo:<br><img src="https://i.loli.net/2020/08/12/EnYCo8QsBReuIFy.png" alt="phpinfo"></p>
+]]></content>
+      <tags>
+        <tag>作业</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>20200812-Linux-Centos7-nginx</title>
+    <url>/2020/08/12/20200812-Linux-Centos7-nginx/</url>
+    <content><![CDATA[<h1 id="20200812-Linux-Centos7-nginx"><a href="#20200812-Linux-Centos7-nginx" class="headerlink" title="20200812-Linux-Centos7-nginx"></a>20200812-Linux-Centos7-nginx</h1><p><img src="http://nginx.org/nginx.png" alt="Nginx"></p>
+<h2 id="安装nginx"><a href="#安装nginx" class="headerlink" title="安装nginx"></a>安装nginx</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum -y install nginx</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/08/12/PGvi5YVb8AO42T9.png" alt="image.png"></p>
+<p>安装完成后编辑 /etc/nginx/nginx.conf 对配置进行修改</p>
+<p>这里我仅对端口进行了修改:</p>
+<p><img src="https://i.loli.net/2020/08/12/fNQZapTsnuErJkM.png" alt="image.png"></p>
+<p>firewall防火墙放行:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">firewall-cmd --permannet --add-port=8080/tcp</span><br><span class="line"><span class="meta">#</span><span class="bash">放行8080端口</span></span><br><span class="line"></span><br><span class="line">firewall-cmd --reload</span><br><span class="line"><span class="meta">#</span><span class="bash">重新载入防火墙</span></span><br></pre></td></tr></table></figure>
+
+<p>默认页面:</p>
+<p><img src="https://i.loli.net/2020/08/12/kyoVBrb1pCDWJlw.png" alt="image.png"></p>
+<p>修改后:</p>
+<p><img src="https://i.loli.net/2020/08/12/fO6urkg431YpNMv.png" alt="image.png"></p>
+<p>参考地址:</p>
+<p><a href="http://nginx.org/en/">http://nginx.org/en/</a></p>
+]]></content>
+      <tags>
+        <tag>作业</tag>
+        <tag>学习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>20200812-Linux-Centos-ssh安全配置</title>
+    <url>/2020/08/12/20200812-Linux-Centos-ssh%E5%AE%89%E5%85%A8%E9%85%8D%E7%BD%AE/</url>
+    <content><![CDATA[<h1 id="20200812-Linux-Centos-ssh安全配置"><a href="#20200812-Linux-Centos-ssh安全配置" class="headerlink" title="20200812-Linux-Centos-ssh安全配置"></a>20200812-Linux-Centos-ssh安全配置</h1><h2 id="修改ssh端口"><a href="#修改ssh端口" class="headerlink" title="修改ssh端口"></a>修改ssh端口</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">vim /etc/ssh/sshd_config </span><br><span class="line"><span class="meta">#</span><span class="bash">对ssh配置文件进行修改</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/08/12/34ca6tjR8z7YnZy.png" alt="image.png"></p>
+<p>firewall防火墙放行:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">firewall-cmd --permanent --add-port=2333/tcp</span><br><span class="line"><span class="meta">#</span><span class="bash">添加放行规则2333/tcp</span></span><br><span class="line">firewall-cmd --reload</span><br><span class="line"><span class="meta">#</span><span class="bash">重新加载防火墙规则</span></span><br></pre></td></tr></table></figure>
+
+<p>重启ssh服务:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">systemctl restart sshd.service</span><br></pre></td></tr></table></figure>
+
+<p>登录测试:</p>
+<p><img src="https://i.loli.net/2020/08/12/eI1chRul3L6NEwX.png" alt="image.png"></p>
+<h2 id="仅运行指定用户登录"><a href="#仅运行指定用户登录" class="headerlink" title="仅运行指定用户登录:"></a>仅运行指定用户登录:</h2><p>创建测试用户并设置密码:</p>
+<p><img src="https://i.loli.net/2020/08/12/TeWnkYgQ73ILvx9.png" alt="image.png"></p>
+<p>修改ssh配置文件</p>
+<p><code>vim /etc/ssh/sshd_config</code></p>
+<p>在配置文件中添加</p>
+<p><code>AllowUsers test1 test2 test3</code></p>
+<p><img src="https://i.loli.net/2020/08/12/aHxK9JWTcFRYM73.png" alt="image.png"></p>
+<p>重启ssh服务</p>
+<p><code>systemctl restart sshd.service </code></p>
+<p>测试:</p>
+<p><img src="https://i.loli.net/2020/08/12/RCNYacm6X7QfzDG.png" alt="image.png"></p>
+<ul>
+<li><p>Permission denied, please try again.</p>
+</li>
+<li><p>权限被拒绝，请重试。</p>
+</li>
+<li></li>
+</ul>
+<p><img src="https://i.loli.net/2020/08/12/eGQf4L9mCWnsUkX.png" alt="image.png"></p>
+<ul>
+<li>test1 登录成功</li>
+</ul>
+<p><img src="https://i.loli.net/2020/08/12/eGQf4L9mCWnsUkX.png" alt="image-20200812220421209"></p>
+<ul>
+<li>test2 登录成功</li>
+</ul>
+<p><img src="https://i.loli.net/2020/08/12/GCbNLXIncPsKRMF.png" alt="image.png"></p>
+<ul>
+<li><p>test3 登录成功</p>
+<h3 id="修改指定尝试密码次数为三次"><a href="#修改指定尝试密码次数为三次" class="headerlink" title="修改指定尝试密码次数为三次"></a>修改指定尝试密码次数为三次</h3></li>
+</ul>
+<p><img src="https://i.loli.net/2020/08/12/NwUEblDsZ3e15Qc.png" alt="image.png"></p>
+<p>重启ssh服务即可</p>
+]]></content>
+      <tags>
+        <tag>作业</tag>
+        <tag>学习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>20200813-Linux- CentOs防火墙基础使用</title>
+    <url>/2020/08/13/20200813-Linux-CentOs%E9%98%B2%E7%81%AB%E5%A2%99%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<h1 id="20200813-Linux-CentOs防火墙基础使用"><a href="#20200813-Linux-CentOs防火墙基础使用" class="headerlink" title="20200813-Linux- CentOs防火墙基础使用"></a>20200813-Linux- CentOs防火墙基础使用</h1><hr>
+<h2 id="Centos7-firewall"><a href="#Centos7-firewall" class="headerlink" title="Centos7 firewall"></a>Centos7 firewall</h2><p>官方参考文档:</p>
+<p><a href="https://firewalld.org/documentation/">https://firewalld.org/documentation/</a></p>
+<h3 id="状态选项参数"><a href="#状态选项参数" class="headerlink" title="状态选项参数:"></a>状态选项参数:</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">--state</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>检查firewalld守护程序是否处于活动状态（即正在运行）。如果处于活动状态，*<code>RUNNING_BUT_FAILED</code><em>则返回退出代码0；如果启动失败，则返回退出代码0 *<code>NOT_RUNNING</code>*。请参阅<a href="https://firewalld.org/documentation/man-pages/firewall-cmd#exit_codes">“退出代码”部分</a>。这还将状态打印到</em><code>STDOUT</code>*。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">--reload</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>重新加载防火墙规则并保留状态信息。当前的永久配置将成为新的运行时配置，即，如果所有运行时仅更改完成，直到重新加载丢失（如果它们也未处于永久配置中）。</p>
+<p>注意：通过直接接口应用的运行时更改不会受到影响，因此将保留在原处，直到完全重新启动firewalld守护程序为止。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">--complete-reload</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>完全重新加载防火墙，甚至是netfilter内核模块。这很可能会终止活动连接，因为状态信息会丢失。仅在严重的防火墙问题时才应使用此选项。例如，如果存在状态信息问题，则使用正确的防火墙规则无法建立连接。</p>
+<p>注意：通过直接接口应用的运行时更改不会受到影响，因此将保留在原处，直到完全重新启动firewalld守护程序为止。</p>
+</blockquote>
+<h3 id="基本使用方法"><a href="#基本使用方法" class="headerlink" title="基本使用方法"></a>基本使用方法</h3><p>放行端口:</p>
+<p><code>firewall-cmd --permanent --add-port=80/tcp</code></p>
+<ul>
+<li>–permannet #永久生效</li>
+<li>–add-port #添加一个指定的端口和端口类型</li>
+<li>80/tcp #端口和端口类型</li>
+</ul>
+<p>移除以开放的端口:</p>
+<p><code>firewall-cmd --permanent --remove-port=80/tcp</code></p>
+<ul>
+<li>–permannet #永久生效</li>
+<li>–remove-port #移除一个指定的端口和端口类型</li>
+<li>80/tcp #端口和端口类型</li>
+</ul>
+<p>查询开放端口:<br>` firewall-cmd –list-ports<br><img src="https://i.loli.net/2020/08/13/npGt1wlmhDi6uR7.png" alt="image.png"></p>
+<h3 id="丢弃icmp包-禁ping"><a href="#丢弃icmp包-禁ping" class="headerlink" title="丢弃icmp包(禁ping)"></a>丢弃icmp包(禁ping)</h3><p><code>firewall-cmd --permanent --add-rich-rule=&#39;rule protocol value=icmp drop&#39;</code></p>
+<ul>
+<li>–add-rich-rule #建新一个富有规则(翻译来源百度参考与官方资料类iptables规则)</li>
+<li>rule protocol value=icmp drop  #规则协议值为丢弃icmp  </li>
+</ul>
+<p>参考资料:</p>
+<p>​                <a href="https://firewalld.org/documentation/man-pages/firewall-cmd">https://firewalld.org/documentation/man-pages/firewall-cmd</a></p>
+<p>​                <a href="https://zhuanlan.zhihu.com/p/23519454">https://zhuanlan.zhihu.com/p/23519454</a></p>
+<p>​                <a href="https://www.computernetworkingnotes.com/rhce-study-guide/firewalld-rich-rules-explained-with-examples.html">https://www.computernetworkingnotes.com/rhce-study-guide/firewalld-rich-rules-explained-with-examples.html</a></p>
+<p>测试:</p>
+<p>默认规则时:</p>
+<p><img src="https://i.loli.net/2020/08/13/zreBUTS3ZCIM6hG.png" alt="image.png"></p>
+<p>添加规则后:<br><img src="https://i.loli.net/2020/08/13/nGKLyeI4qwHTgbh.png" alt="image.png"></p>
+<p><img src="https://i.loli.net/2020/08/13/BgiczvPAOosQx2R.png" alt="image.png"></p>
+<h2 id="Centos6-iptables"><a href="#Centos6-iptables" class="headerlink" title="Centos6 iptables"></a>Centos6 iptables</h2><p>参考资料:</p>
+<p><a href="http://www.zsythink.net/archives/1199">http://www.zsythink.net/archives/1199</a></p>
+<p><a href="http://www.netfilter.org/">http://www.netfilter.org/</a></p>
+<p>禁止ping:</p>
+<p>未启用规则前:</p>
+<p><img src="https://i.loli.net/2020/08/13/mvq8LGQONHRAo2k.png" alt="image.png"></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">iptables -I INPUT -p icmp --icmp-type any -j DROP   </span><br></pre></td></tr></table></figure>
+
+<p>启用规则后</p>
+<p><img src="https://i.loli.net/2020/08/13/nAxbT8gSpkD32jX.png" alt="image.png"></p>
+]]></content>
+      <tags>
+        <tag>作业</tag>
+        <tag>学习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>20200813-Linux-Centos7 LNMP搭建wordpress</title>
+    <url>/2020/08/13/20200813-Linux-Centos7-LNMP%E6%90%AD%E5%BB%BAwordpress/</url>
+    <content><![CDATA[<h1 id="20200813-Linux-Centos7-LNMP搭建wordpress"><a href="#20200813-Linux-Centos7-LNMP搭建wordpress" class="headerlink" title="20200813-Linux-Centos7 LNMP搭建wordpress"></a>20200813-Linux-Centos7 LNMP搭建wordpress</h1><p><img src="https://i.loli.net/2020/08/13/wGnUHVhAcak81dq.png" alt="image.png"><br>wordpress :<a href="https://cn.wordpress.org/">https://cn.wordpress.org/</a><br><img src="https://i.loli.net/2020/08/13/OvyjLZEzsa5mDrw.png" alt="image.png"><br>LNMP:<a href="https://lnmp.org/">https://lnmp.org/</a></p>
+<h3 id="安装LNMP"><a href="#安装LNMP" class="headerlink" title="安装LNMP:"></a>安装LNMP:</h3><p>这里采用一键安装脚本:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">wget http://soft.vpser.net/lnmp/lnmp1.7.tar.gz -cO lnmp1.7.tar.gz &amp;&amp; tar zxf lnmp1.7.tar.gz &amp;&amp; cd lnmp1.7 &amp;&amp; ./install.sh lnmp</span><br></pre></td></tr></table></figure>
+
+<p>出现交换页面根据需求选择你所需要的软件版本<br>安装完成:<br><img src="https://i.loli.net/2020/08/13/M7XKLwkNeERuG2U.png" alt="image.png"><br><img src="https://i.loli.net/2020/08/13/A6dJ4gRU2aXnbj7.png" alt="image.png"></p>
+<h3 id="下载wordpress博客"><a href="#下载wordpress博客" class="headerlink" title="下载wordpress博客"></a>下载wordpress博客</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">wget  https://cn.wordpress.org/latest-zh_CN.tar.gz</span><br><span class="line"><span class="meta">#</span><span class="bash">通过wordpressCN下载</span></span><br><span class="line">tar -zxvf latest-zh_CN.tar.gz</span><br><span class="line"><span class="meta">#</span><span class="bash">解压wordpress包</span></span><br><span class="line">cp -r -p wordpress /home/wwwroot/default</span><br><span class="line"><span class="meta">#</span><span class="bash">复制wordpress文件到网站目录</span></span><br><span class="line">cd /home/wwwroot/default</span><br><span class="line"><span class="meta">#</span><span class="bash">切换工作目录</span></span><br><span class="line">chown -R www:www wordpress/</span><br><span class="line"><span class="meta">#</span><span class="bash">修改目录所属用户和所属组</span></span><br><span class="line">chmod -R wordpress/</span><br><span class="line"><span class="meta">#</span><span class="bash">修改目录权限</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="配置数据库"><a href="#配置数据库" class="headerlink" title="配置数据库"></a>配置数据库</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">mysql -u root -p</span><br><span class="line"><span class="meta">#</span><span class="bash">链接到数据库</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/08/13/oaREjDMdbVBmhST.png" alt="image.png"></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> wordpress;</span><br><span class="line"><span class="comment">#创建数据库 wordpress</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">user</span> wpadmin <span class="keyword">identified</span> <span class="keyword">by</span> <span class="string">&#x27;password&#x27;</span>;</span><br><span class="line"><span class="comment">#创建用户wpadmin并设置密码password</span></span><br><span class="line"><span class="keyword">GRANT</span> <span class="keyword">ALL</span> <span class="keyword">ON</span> wordpress.* <span class="keyword">TO</span> <span class="string">&#x27;wpadmin&#x27;</span>@<span class="string">&#x27;%&#x27;</span> <span class="keyword">WITH</span> <span class="keyword">GRANT</span> <span class="keyword">OPTION</span>;</span><br><span class="line"><span class="comment">#分配用户权限为wordpress库的完整权限</span></span><br><span class="line"><span class="keyword">flush</span> <span class="keyword">privileges</span>;</span><br><span class="line"><span class="comment">#刷新权限</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/08/13/tsopfQj5aDLbPdX.png" alt="image.png"></p>
+<h3 id="wordpress-WEB安装"><a href="#wordpress-WEB安装" class="headerlink" title="wordpress WEB安装"></a>wordpress WEB安装</h3><p>进入wordpress安装页面<br><img src="https://i.loli.net/2020/08/13/cjJSlM8rfZyIoGL.png" alt="image.png"><br>设置数据库信息:</p>
+<p><img src="https://i.loli.net/2020/08/13/W85qjU2siQTp6tH.png" alt="image.png"></p>
+<p>设置基本信息完成安装:</p>
+<p><img src="https://i.loli.net/2020/08/13/FRjt16cfQ8CNXqe.png" alt="image.png"></p>
+<p>完成安装:</p>
+<p><img src="https://i.loli.net/2020/08/13/mnFwGR9bISr2Vfv.png" alt="image-20200813131923629.png"><br>发布新的页面进行测试:</p>
+<p><img src="https://i.loli.net/2020/08/13/GntDUYEKTLR9Wzh.png" alt="image.png"></p>
+]]></content>
+      <tags>
+        <tag>作业</tag>
+        <tag>学习</tag>
+        <tag>记录</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>记20200815面试</title>
+    <url>/2020/08/17/%E8%AE%B020200815%E9%9D%A2%E8%AF%95/</url>
+    <content><![CDATA[<h1 id="记20200815面试"><a href="#记20200815面试" class="headerlink" title="记20200815面试"></a>记20200815面试</h1><p>预先内容:<br>感谢某dalao的推荐,只是我搞砸了<br>面试岗位:网络安全服务(实习)<br>约定面试时间:20200815,14.00<br>到达位置时间:20200815,13.43</p>
+<h3 id="心里状态"><a href="#心里状态" class="headerlink" title="心里状态:"></a>心里状态:</h3><pre><code>到现场之前,恩慌了一会,进去到现场等待面试的时候十分平静,不知道是慌到了极点还是什么,开始面试的时候整个人的状态处于未知,这次面试基本上状态完全是错误的,应以平常心去,每次说话前去思考一下是否存在问题.</code></pre>
+<h3 id="问题要点"><a href="#问题要点" class="headerlink" title="问题要点"></a>问题要点</h3><pre><code>恩,先在这里感谢面试我的某dalao,没要他的话我应该更凉.</code></pre>
+<h5 id="面试流程"><a href="#面试流程" class="headerlink" title="面试流程:"></a>面试流程:</h5><figure class="highlight text"><table><tr><td class="code"><pre><span class="line">渗透测试的流程(给你一个域名你需要怎么做):</span><br><span class="line">这个应该是我答的最差的吧,心里是完全清楚流程过程的可是回答的一团糟</span><br><span class="line">1,信息搜集:</span><br><span class="line">    搜集域名信息(注册邮箱,子域名),通过邮箱收寻相关管理员信息,服务器版本信息(Win,limux),中间件版本信息,CMS指纹信息,通过GITHUB来寻找该网站是否开源</span><br><span class="line">2,基本测试:</span><br><span class="line">    扫描目录结构,判断信息传参点(sql注入测试,xss测试),通过管理员相关信息和弱口令来制作密码本尝试进行后台登录,对登录页面进行手工测试(是否可被穷举,是否存在信息遍历),对修改密码的页面进行手工(是否存在信息遍历,是否存在任意账户修改)</span><br><span class="line">2,深入测试:</span><br><span class="line">    寻找文件上传点进行测试,如果有源代码可以直接对源代码进行审计,读取数据包对cookies进行分析,是否存在文件包涵,通过CMS版本来测试以知漏洞(rec,sql等等)</span><br><span class="line"></span><br><span class="line">PHP data:</span><br><span class="line">    一种伪协议,对数据流进行封装,通常用来执行php代码(data://text/plain,一句话)</span><br><span class="line"></span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+<p>上面大概是自己复盘了一下,恩感觉还是有点乱,应该是我技术力不行吧(还有一些内容没写)</p>
+<p>面试中还简单的问了一下python,恩没有细问也不做记录:</p>
+<p>python我事先准备了一些,可是基本上没被问到:</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">Python 通常使用的发包库</span><br><span class="line">    urllib2</span><br><span class="line">    request</span><br><span class="line">    </span><br><span class="line">Python 正则表达:</span><br><span class="line">    re</span><br><span class="line">    </span><br><span class="line">Python的基本类型:</span><br><span class="line">    数字,字符串,元组,集合,列表,字典</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>写着写着有不知道写什么了就这样吧 </p>
+<p>心态平和,遇事不慌,调整好心态  这应该才是我需要准备的东西</p>
+]]></content>
+      <tags>
+        <tag>记录</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>20200817 Linux-iptables端口转发</title>
+    <url>/2020/08/17/20200817-Linux-iptables%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/</url>
+    <content><![CDATA[<h1 id="20200817-Linux-iptables端口转发"><a href="#20200817-Linux-iptables端口转发" class="headerlink" title="20200817 Linux-iptables端口转发"></a>20200817 Linux-iptables端口转发</h1><p>iptables 转发端口<br>Centos6 10.10.10.4<br>KaliLinux 10.10.10.9</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sysctl -w net.ipv4.ip_forward=1</span><br><span class="line"></span><br><span class="line">iptables -t nat -A PREROUTING -p tcp --dport 2333 -j DNAT --to-destination 10.10.10.9:80</span><br><span class="line"></span><br><span class="line">iptables -t nat -A POSTROUTING -p tcp -d 10.10.10.9 --dport 80 -j SNAT --to-source 10.10.10.4</span><br><span class="line"></span><br><span class="line">service  iptables  save </span><br><span class="line"></span><br><span class="line">service  iptables  restart</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2020/08/17/6oYAp9NlMaBK8EV.png" alt="image.png"></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>Linux-20200817-nginx反向代理</title>
+    <url>/2020/08/17/Linux-20200817-nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/</url>
+    <content><![CDATA[<h1 id="nginx反向代理"><a href="#nginx反向代理" class="headerlink" title="nginx反向代理"></a>nginx反向代理</h1><p>修改nginx.conf </p>
+<p><img src="https://i.loli.net/2020/08/17/GPyg1tzMIJlBefq.png" alt="image.png"></p>
+<p>重启nginx服务即可</p>
+<p><img src="https://i.loli.net/2020/08/17/tQmjvycMrOFu6UI.png" alt="image.png"></p>
+]]></content>
+      <tags>
+        <tag>作业</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>20200818-Linux服务搭建与端口转发(nginx反向代理iptables端口转发)-ssserver搭建</title>
+    <url>/2020/08/18/20200818-Linux%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA%E4%B8%8E%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91-nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86iptables%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91-ssserver%E6%90%AD%E5%BB%BA/</url>
+    <content><![CDATA[<h1 id="20200818-Linux服务搭建与端口转发-nginx反向代理iptables端口转发-ssserver搭建"><a href="#20200818-Linux服务搭建与端口转发-nginx反向代理iptables端口转发-ssserver搭建" class="headerlink" title="20200818-Linux服务搭建与端口转发(nginx反向代理iptables端口转发),ssserver搭建"></a>20200818-Linux服务搭建与端口转发(nginx反向代理iptables端口转发),ssserver搭建</h1><h2 id="搭建WEB服务"><a href="#搭建WEB服务" class="headerlink" title="搭建WEB服务"></a>搭建WEB服务</h2><h3 id="搭建基本web服务器"><a href="#搭建基本web服务器" class="headerlink" title="搭建基本web服务器"></a>搭建基本web服务器</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum install  mariadb mariadb-servrer php php-mysql httpd  mysql</span><br><span class="line"><span class="meta">#</span><span class="bash">安装基本服务</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/08/18/XwSd8UgmN7TI2aF.png" alt="image.png"></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">systemctl  restart httpd </span><br><span class="line">systemctl  restart  mariadb</span><br><span class="line"><span class="meta">#</span><span class="bash">启动httpd服务与mariadb服务</span></span><br><span class="line">firewall-cmd   --permanent  --add-port=80/tcp</span><br><span class="line">firewall-cmd   --reload</span><br><span class="line"><span class="meta">#</span><span class="bash">防火墙放行80端口,并重新载入配置</span></span><br></pre></td></tr></table></figure>
+
+<p>WEB基本测试<br><img src="https://i.loli.net/2020/08/18/hgCnuq2ENFK46WQ.png" alt="image.png"></p>
+<p>php基本测试:<br><img src="https://i.loli.net/2020/08/18/6aXuYZqO9pBQUDf.png" alt="image.png"></p>
+<h3 id="搭建DVWA"><a href="#搭建DVWA" class="headerlink" title="搭建DVWA"></a>搭建DVWA</h3><p>下载并解压DVWA<br><img src="https://i.loli.net/2020/08/18/M4prdfaP6mcsntY.gif" alt="Peek 2020-08-18 17-18.gif"></p>
+<p>配置dvwa数据库:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">CREATE DATABASE DVWA;</span><br><span class="line"><span class="meta">#</span><span class="bash">创建数据库 DVWA</span></span><br><span class="line">create user dvwa@localhost identified by &#x27;password&#x27;;</span><br><span class="line"><span class="meta">#</span><span class="bash">创建用户dvwa并设置密码password</span></span><br><span class="line">grant ALL on DVWA.* to dvwa@localhost;</span><br><span class="line"><span class="meta">#</span><span class="bash">分配用户权限为DVWA库的完整权限</span></span><br><span class="line">flush privileges;</span><br><span class="line"><span class="meta">#</span><span class="bash">刷新权限</span></span><br></pre></td></tr></table></figure>
+
+<p>修改dvwa配置文件config.inc.php:</p>
+<p><img src="https://i.loli.net/2020/08/18/OCESFoyQWBGUTps.png" alt="image.png"></p>
+<p>基本完成:</p>
+<p><img src="https://i.loli.net/2020/08/18/zGL63gsFTiASf9H.gif" alt="Peek 2020-08-18 18-06.gif"></p>
+<h3 id="搭建sqli-labs"><a href="#搭建sqli-labs" class="headerlink" title="搭建sqli-labs"></a>搭建sqli-labs</h3><p>克隆文件到服务器:<br><img src="https://i.loli.net/2020/08/18/b3jTIaqwZvJB9se.gif" alt="sql.gif"><br>启动网页配置即可:<br><img src="https://i.loli.net/2020/08/18/2Uh5TxzbWNLePFG.gif" alt="sqlweb.gif"></p>
+<h3 id="搭建wordpress"><a href="#搭建wordpress" class="headerlink" title="搭建wordpress"></a>搭建wordpress</h3><p>下载解压:<br><img src="https://i.loli.net/2020/08/18/Cp7yeKMxnEiAqlt.gif" alt="woe1.gif"></p>
+<p>创建数据库:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">CREATE DATABASE wp_db;</span><br><span class="line"><span class="meta">#</span><span class="bash">创建数据库 wp_db</span></span><br><span class="line">create user wpadmin@localhost identified by &#x27;password&#x27;;</span><br><span class="line"><span class="meta">#</span><span class="bash">创建用户wpadmin并设置密码password</span></span><br><span class="line">grant ALL on wp_db.* to wpadmin@localhost;</span><br><span class="line"><span class="meta">#</span><span class="bash">分配用户权限为wp_db库的完整权限</span></span><br><span class="line">flush privileges;</span><br><span class="line"><span class="meta">#</span><span class="bash">刷新权限</span></span><br></pre></td></tr></table></figure>
+
+<p>分配目录权限:<br><img src="https://i.loli.net/2020/08/18/toqBCSI16FxaJ2Y.gif" alt="Peek 2020-08-18 19-02.gif"></p>
+<p>web配置:<br><img src="https://i.loli.net/2020/08/18/fDcxrW9QsjJ2azU.gif" alt="Peek 2020-08-18 19-25.gif"></p>
+<h3 id="搭建phpcms"><a href="#搭建phpcms" class="headerlink" title="搭建phpcms"></a>搭建phpcms</h3><p>下载文件并解压:</p>
+<p><img src="https://i.loli.net/2020/08/18/CARb2uDpVTSh8jd.gif" alt="Peek 2020-08-18 19-40.gif"></p>
+<p>设置文件权限:<br><img src="https://i.loli.net/2020/08/18/bcXBrgWohdJpHn1.gif" alt="Peek 2020-08-18 19-56.gif"></p>
+<p>创建数据库文件:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">CREATE DATABASE phpcmsdb;</span><br><span class="line"><span class="meta">#</span><span class="bash">创建数据库 phpcmsdb</span></span><br><span class="line">create user phpcms@localhost identified by &#x27;password&#x27;;</span><br><span class="line"><span class="meta">#</span><span class="bash">创建用户phpcms并设置密码password</span></span><br><span class="line">grant ALL on phpcmsdb.* to phpcms@localhost;</span><br><span class="line"><span class="meta">#</span><span class="bash">分配用户权限为phpcmsdb库的完整权限</span></span><br><span class="line">flush privileges;</span><br><span class="line"><span class="meta">#</span><span class="bash">刷新权限</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/08/18/drY4spzkm2WB19l.png" alt="image.png"></p>
+<p>WEB设置安装<br><img src="https://i.loli.net/2020/08/18/MyD8ATGiKhV7flF.gif" alt="Peek 2020-08-18 20-28.gif"></p>
+<p>创建指定缺失目录:<br><img src="https://i.loli.net/2020/08/18/3YGLOtj95baDm67.gif" alt="Peek 2020-08-18 20-13.gif"></p>
+<p>结束</p>
+<h4 id="检查WEB-Server-目录结构"><a href="#检查WEB-Server-目录结构" class="headerlink" title="检查WEB Server 目录结构"></a>检查WEB Server 目录结构</h4><p><img src="https://i.loli.net/2020/08/18/TthiSmjGegsFpLf.png" alt="image.png"></p>
+<h2 id="nginx反向代理"><a href="#nginx反向代理" class="headerlink" title="nginx反向代理"></a>nginx反向代理</h2><p>对C7_3配置进行修改:<br>修改nginx.conf配置文件<br><img src="https://i.loli.net/2020/08/18/FwLP5Isqj1HGgC2.png" alt="image.png"><br>放行80端口<br><img src="https://i.loli.net/2020/08/18/SvzUYm9TuL6GXgw.png" alt="image.png"><br>测试:<br>    10.10.10.3 Web服务器<br>    10.10.10.7 nginx服务器<br><img src="https://i.loli.net/2020/08/18/bM8nYRvykjG7NhF.gif" alt="Peek 2020-08-18 21-03.gif"></p>
+<h2 id="iptables-端口转发"><a href="#iptables-端口转发" class="headerlink" title="iptables 端口转发"></a>iptables 端口转发</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">echo net.ipv4.ip_forward=1 &gt;&gt; /etc/sysctl.conf</span><br><span class="line"><span class="meta">#</span><span class="bash">在这里我的命令死活有问题,最后是手动修改的配置文件(使用了sysctl -p加载但是加载的值一直为0)</span></span><br><span class="line"></span><br><span class="line">iptables -I INPUT -p tcp --dport 80 -j ACCEPT</span><br><span class="line"></span><br><span class="line">iptables -t nat -A PREROUTING -p tcp -m tcp --dport 80 -j DNAT --to-destination  10.10.10.3:80</span><br><span class="line"></span><br><span class="line">iptables -t nat -A POSTROUTING -p tcp -d 10.10.10.3 --dport 80 -j SNAT --to-source 10.10.10.6</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/08/18/bEwPola3XrQIyFg.png" alt="image.png"></p>
+<p>测试:<br>    Centos7 WEB server 10.10.10.3<br>    Centos6  iptables 10.10.10.6</p>
+<p><img src="https://i.loli.net/2020/08/18/lPE1MJAsOtFvzpB.gif" alt="Peek 2020-08-18 23-23.gif"></p>
+<h2 id="安装shadowsocks-python服务"><a href="#安装shadowsocks-python服务" class="headerlink" title="安装shadowsocks-python服务"></a>安装shadowsocks-python服务</h2><p>安装编译依赖环境</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yum install python-setuptools &amp;&amp; easy_install pip pip install shadowsocks</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/08/18/SYX7jVumKDT8WJx.gif" alt="Peek 2020-08-18 23-35.gif"><br>创建shadowsocks.json配置文件:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">&#123;  </span><br><span class="line">    &quot;server&quot;:&quot;0.0.0.0&quot;,  </span><br><span class="line">    &quot;server_port&quot;:3300,  </span><br><span class="line">    &quot;local_port&quot;:1080,  </span><br><span class="line">    &quot;password&quot;:&quot;password&quot;,  </span><br><span class="line">    &quot;timeout&quot;:600,  </span><br><span class="line">    &quot;method&quot;:&quot;aes-256-cfb&quot;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>启动服务:<br><img src="https://i.loli.net/2020/08/18/4v7ZDVANgetQrjW.gif" alt="Peek 2020-08-18 23-38.gif"><br>防火墙端口放行:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">firewall-cmd --permanent --add-port=3300/tcp</span><br><span class="line">firewall-cmd --permanent --add-port=3300/udp</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+
+<p>访问测试(使用手机端访问了百度等网站):<br><img src="https://i.loli.net/2020/08/18/S2hCALsvO5YXu8b.gif" alt="Peek 2020-08-18 23-45.gif"></p>
+]]></content>
+      <tags>
+        <tag>作业</tag>
+        <tag>学习</tag>
+        <tag>记录</tag>
+      </tags>
+  </entry>
+</search>
