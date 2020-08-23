@@ -631,7 +631,14 @@ $(function() {
     if (comment.data('ae') == true){
         comment.click();
     }
-		
-    console.log("%c Github %c","background:#24272A; color:#ffffff","","https://github.com/Fechin/hexo-theme-diaspora")
+
+console.log('#####################################################\n')
+console.log('#           _   sakuradied.github.io _ _          _ #\n')
+console.log('# ___  __ _| | ___   _ _ __ __ _  __| (_) ___  __| |#\n')
+console.log('#/ __|/ _` | |/ / | | | \'__/ _` |/ _` | |/ _ \\/ _` |#\n')
+console.log('#\\__ \\ (_| |   <| |_| | | | (_| | (_| | |  __/ (_| |#\n')
+console.log('#|___/\\__,_|_|\\_\\\\__,_|_|  \\__,_|\\__,_|_|\\___|\\__,_|#\n')
+console.log('######################################################\n')
+
 })
 
