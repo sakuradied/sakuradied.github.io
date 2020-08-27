@@ -525,4 +525,29 @@
         <tag>Html</tag>
       </tags>
   </entry>
+  <entry>
+    <title>20200827-csrf-简单实验</title>
+    <url>/2020/08/27/20200827-csrf-%E7%AE%80%E5%8D%95%E5%AE%9E%E9%AA%8C/</url>
+    <content><![CDATA[<h1 id="20200827-csrf-简单实验"><a href="#20200827-csrf-简单实验" class="headerlink" title="20200827-csrf-简单实验"></a>20200827-csrf-简单实验</h1><p>写东西写着写着写到了csrf,发现以前用过,还害我看了半天,emmmm 鱼的记忆太难了</p>
+<p>以下均为个人看解:</p>
+<p>csrf 跨站伪造攻击:</p>
+<pre><code>写点简单的,就是用户的请求地址没有受到校验,导致了用户请求任意一个网站都可以修改指定网站的用户数据</code></pre>
+<p>大概是这样的:<br>    用户登录了网站A,网站A给用户下发了cookie或session,然后一不小心点了网站B的页面,网站B向网站A发了一个请求包(用户不知道),网站A没有对请求地址进行校验,执行了网站B的请求,(这个时候网站A就会认为是用户的操作而不是网站B的操作)</p>
+<p>(其实请求地址校验是不靠谱的真正的解决方案应该是token+伪随机数校验)<br>(上面都是自己写了 没有参考文章  可能存在一些问题,当笑话看就好了)</p>
+<p>一个简单的复现:<br>环境是 DVWA(Low):<br><img src="https://i.loli.net/2020/08/27/a5C1VDxiOcFbXT6.png" alt="image.png"></p>
+<p>对发包数据包进行分析<br>请求地址:<br><a href="http://10.10.10.5/dvwa/vulnerabilities/csrf/">http://10.10.10.5/dvwa/vulnerabilities/csrf/</a>?<br>get参数:<br><code>password_new=admin&amp;password_conf=admin&amp;Change=Change</code></p>
+<p>构建payload页面(我这里写的有点复杂但是无伤大雅)</p>
+<p><img src="https://i.loli.net/2020/08/27/3Wol5pCLzh9VMSw.png" alt="image.png"></p>
+<p>操作利用:<br><img src="https://i.loli.net/2020/08/27/uSmc918d2HpLJ7s.gif" alt="Peek 2020-08-27 15-17.gif"></p>
+<p><strong>(其实完全可以写个js自动提交表单的,写成异步也可233333</strong></p>
+]]></content>
+      <categories>
+        <category>学习</category>
+        <category>安全</category>
+      </categories>
+      <tags>
+        <tag>学习</tag>
+        <tag>记录</tag>
+      </tags>
+  </entry>
 </search>
