@@ -550,4 +550,14 @@
         <tag>记录</tag>
       </tags>
   </entry>
+  <entry>
+    <title>20200829- javascript断点调试</title>
+    <url>/2020/08/29/20200829-javascript%E6%96%AD%E7%82%B9%E8%B0%83%E8%AF%95/</url>
+    <content><![CDATA[<h1 id="20200829-javascript断点调试"><a href="#20200829-javascript断点调试" class="headerlink" title="20200829- javascript断点调试"></a>20200829- javascript断点调试</h1><p>使用Chrome浏览器F12进入开发者模式进行调试:<br><img src="https://i.loli.net/2020/08/29/mM5BiFXvuJfeAaV.png" alt="image.png"></p>
+<p>在于调试没太多可记录的和C的debugger几乎是差不多的可能就是快捷键上有些差距:<br>F9 下一步(逐条)<br>F10 跨步 略过函数执行<br>F11 步入 依次到函数(等待执行,进入函数)<br>shift+F11 步出 跳到函数末端<br>F8 继续执行(直到下一个断点或者程序结束)</p>
+<p>这边应该可以理解为寄存器区(区别还是挺大的)<br><img src="https://i.loli.net/2020/08/29/LecxrUG9uNPtKBQ.png" alt="image.png"></p>
+<p>watch  显示任意表达式的值<br>call stack 显示嵌套的调用链<br>scope 显示当前的变量(local 局部变量 global全局变量)</p>
+<p>简单操作演示:<br><img src="https://i.loli.net/2020/08/29/yLUF19X8Y6hOiIu.gif" alt="Peek 2020-08-29 14-29.gif"></p>
+]]></content>
+  </entry>
 </search>
