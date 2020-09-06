@@ -593,4 +593,23 @@
         <tag>记录</tag>
       </tags>
   </entry>
+  <entry>
+    <title>20200907-XCTF-PHP2(URL二次编码)</title>
+    <url>/2020/09/07/20200907-XCTF-PHP2-URL%E4%BA%8C%E6%AC%A1%E7%BC%96%E7%A0%81/</url>
+    <content><![CDATA[<h1 id="20200907-XCTF-PHP2-URL二次编码"><a href="#20200907-XCTF-PHP2-URL二次编码" class="headerlink" title="20200907-XCTF-PHP2(URL二次编码)"></a>20200907-XCTF-PHP2(URL二次编码)</h1><p>唉这题太草了,我自己的字典跑了半个小时的目录没结果,一看wp是index.phps (吐血<br>**<em>index.phps**</em></p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span>(<span class="string">&quot;admin&quot;</span>===$_GET[id]) &#123;</span><br><span class="line">  <span class="keyword">echo</span>(<span class="string">&quot;&lt;p&gt;not allowed!&lt;/p&gt;&quot;</span>);</span><br><span class="line">  <span class="keyword">exit</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//这里回对get传参进行一次url解码($_GET会默认解码一次(大约是这样的))</span></span><br><span class="line"><span class="comment">/*Warning</span></span><br><span class="line"><span class="comment">超全局变量 $_GET 和 $_REQUEST 已经被解码了。对 $_GET 或 $_REQUEST 里的元素使用 urldecode() 将会导致不可预计和危险的结果。*/</span></span><br><span class="line">$_GET[id] = urldecode($_GET[id]);</span><br><span class="line"><span class="keyword">if</span>($_GET[id] == <span class="string">&quot;admin&quot;</span>)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">echo</span> <span class="string">&quot;&lt;p&gt;Access granted!&lt;/p&gt;&quot;</span>;</span><br><span class="line">  <span class="keyword">echo</span> <span class="string">&quot;&lt;p&gt;Key: xxxxxxx &lt;/p&gt;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line">Can you anthenticate to this website?</span><br></pre></td></tr></table></figure>
+
+<p>仔细一看超级简单的,只要urlencode两次就好了<br>结果用php编码半天就一直是admin草了<br>最后利用burp进行编码了两次就可了<br><img src="https://i.loli.net/2020/09/07/xH1XvD4A5MrnKOG.png" alt="image.png"></p>
+<p>payload:<br><code>index.php?id=%2561%2564%256d%2569%256e</code></p>
+<p>阅读资料:<br>    <a href="https://www.php.net/urldecode">https://www.php.net/urldecode</a></p>
+]]></content>
+      <categories>
+        <category>PHP</category>
+        <category>web安全</category>
+      </categories>
+      <tags>
+        <tag>学习</tag>
+        <tag>记录</tag>
+      </tags>
+  </entry>
 </search>
