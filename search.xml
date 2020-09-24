@@ -612,4 +612,27 @@
         <tag>记录</tag>
       </tags>
   </entry>
+  <entry>
+    <title>20200924-xctf-WEB2-php解码</title>
+    <url>/2020/09/24/20200924-xctf-WEB2-php%E8%A7%A3%E7%A0%81/</url>
+    <content><![CDATA[<h1 id="xctf-WEB2-php解码"><a href="#xctf-WEB2-php解码" class="headerlink" title="xctf WEB2 php解码"></a>xctf WEB2 php解码</h1><p>这是来自XCTF 攻防世界中的 web高级的一道题,某种意义上来说超级简单的</p>
+<p><strong>index.php 页面:</strong></p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$miwen=<span class="string">&quot;a1zLbgQsCESEIqRLwuQAyMwLyq2L5VwBxqGA3RQAyumZ0tmMvSGM2ZwB4tws&quot;</span>;</span><br><span class="line"><span class="comment">//被加密的字符串</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">encode</span>(<span class="params">$str</span>)</span>&#123;</span><br><span class="line">    $_o=strrev($str);</span><br><span class="line">    <span class="comment">// echo $_o;</span></span><br><span class="line">        </span><br><span class="line">    <span class="keyword">for</span>($_0=<span class="number">0</span>;$_0&lt;strlen($_o);$_0++)&#123;</span><br><span class="line">        $_c=substr($_o,$_0,<span class="number">1</span>);</span><br><span class="line">        <span class="comment">//每次取字符串$_o的首位</span></span><br><span class="line">        $__=ord($_c)+<span class="number">1</span>;</span><br><span class="line">        <span class="comment">//转换成ASCII编码后加一</span></span><br><span class="line">        $_c=chr($__);</span><br><span class="line">        $_=$_.$_c;   </span><br><span class="line">        <span class="comment">//进行字符串拼接</span></span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">return</span> str_rot13(strrev(base64_encode($_)));</span><br><span class="line">    <span class="comment">//进行一次base64编码后反转字符串后进行一次ROT13编码</span></span><br><span class="line">    <span class="comment">//https://www.runoob.com/php/func-string-strrev.html</span></span><br><span class="line">    <span class="comment">//https://www.runoob.com/php/func-string-str-rot13.html</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">   逆向加密算法，解密$miwen就是flag</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>按上思路编写解码的php文件:<br>exp.php:</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$str = <span class="string">&quot;a1zLbgQsCESEIqRLwuQAyMwLyq2L5VwBxqGA3RQAyumZ0tmMvSGM2ZwB4tws&quot;</span>;</span><br><span class="line">$str =  base64_decode(strrev(str_rot13($str)));</span><br><span class="line">$_o = strrev($str);</span><br><span class="line"><span class="keyword">for</span>($_0=<span class="number">0</span>;$_0&lt;strlen($_o);$_0++)&#123;</span><br><span class="line">        $_c=substr($_o,$_0,<span class="number">1</span>);</span><br><span class="line">        $__=ord($_c)<span class="number">-1</span>;</span><br><span class="line">        $_c=chr($__);</span><br><span class="line">        $_=$_.$_c;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">echo</span> $_;</span><br><span class="line"><span class="comment">//代码几乎没变就是把+1变成了-1,同时把字符串编码的顺序换了一下</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>取得flag:<br><img src="https://i.loli.net/2020/09/24/JeKw68p2Qsf5B1N.png" alt="image.png"></p>
+<p>参考资料:</p>
+<p><a href="https://www.runoob.com/php/func-string-str-rot13.html">https://www.runoob.com/php/func-string-str-rot13.html</a></p>
+<p><a href="https://www.runoob.com/php/func-string-strrev.html">https://www.runoob.com/php/func-string-strrev.html</a></p>
+<p><a href="https://www.runoob.com/php/func-string-substr.html">https://www.runoob.com/php/func-string-substr.html</a></p>
+]]></content>
+      <categories>
+        <category>PHP</category>
+        <category>web安全</category>
+      </categories>
+      <tags>
+        <tag>学习</tag>
+        <tag>记录</tag>
+      </tags>
+  </entry>
 </search>
