@@ -800,4 +800,28 @@
         <tag>mysql</tag>
       </tags>
   </entry>
+  <entry>
+    <title>20201027 PHP文件包含弱类型比较(CTF)</title>
+    <url>/2020/11/14/20201027-PHP%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%BC%B1%E7%B1%BB%E5%9E%8B%E6%AF%94%E8%BE%83-CTF/</url>
+    <content><![CDATA[<h1 id="20201027-PHP文件包含弱类型比较-CTF"><a href="#20201027-PHP文件包含弱类型比较-CTF" class="headerlink" title="20201027 PHP文件包含弱类型比较(CTF)"></a>20201027 PHP文件包含弱类型比较(CTF)</h1><h4 id="出去游荡莫名奇妙的开始了ctf-写下本文做一个记录"><a href="#出去游荡莫名奇妙的开始了ctf-写下本文做一个记录" class="headerlink" title="出去游荡莫名奇妙的开始了ctf 写下本文做一个记录"></a>出去游荡莫名奇妙的开始了ctf 写下本文做一个记录</h4><p><img src="https://i.loli.net/2020/10/27/SUGPZ5JYIOWktrd.png" alt="image.png"><br>猫猫挺可爱的</p>
+<p>简单的页面浏览寻找到了文件包涵点(参数可控)<br>尝试包涵了本地文件均为失败</p>
+<p>利用php伪协议 读取到源代码:<br><code>page=php://filter/read=convert.base64-encode/resource=flag</code></p>
+<p>上面试了多个伪协议就这一个可以用,<br>获取到flag页面的源代码</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">$flag = file_get_contents(<span class="string">&#x27;/flag&#x27;</span>);</span><br><span class="line"><span class="comment">//将整个文件读入一个字符串(读取文件的内容信息到字符串)</span></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_POST[<span class="string">&#x27;flag&#x27;</span>])) &#123;</span><br><span class="line"><span class="comment">//isset检查法flag参数是否设置(检测变量是否已设置并且非 NULL)</span></span><br><span class="line">    <span class="keyword">if</span> (!@strcmp($_POST[<span class="string">&#x27;flag&#x27;</span>], $flag)) &#123;</span><br><span class="line">    <span class="comment">//字符串内容比较 用@符号抑制了错误信息</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&#x27;okok, this is flag：&#x27;</span> . $flag;</span><br><span class="line">    &#125; <span class="keyword">else</span></span><br><span class="line">        <span class="keyword">echo</span> (<span class="string">&quot;你还是看猫去吧&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>唉,这题我属石是卡了半天,最后被某个dalao点通了</p>
+<p>从开头看起:<br>    取一个文件的flag的值,这个文件在根目录,然后先前各种读取操作发现根本无法实现(其实关键点也不再这个地方)<br>    if(isset) 检测变量是否已设置并且非 NULL (这个函数是这道题的关键点)<br>    strcmp — 二进制安全字符串比较 (改函数区分大小写,只接受字符串内容) @抑制函数错误信息(这里的if用上了一个!号)</p>
+<p>解题流程:<br>    绕过第一个if (isset)  这里是用的 flag[] 将变量设置为了一个数组 ,通过这个方式来报错绕过第二个函数,同时isset也成功绕过<br>    (在php中(弱类型语言)里 flag[] 和flag 应该是一个介等于的关系 )</p>
+<p>​    <del>在第二函数报错的情况下返回数值应该为0</del> 加上前面的! 即可反回1到if<br>​    #补充自己实验了 并未返回一个0 而是一个警告 <code>&lt;b&gt;Warning&lt;/b&gt;:  strcmp() expects parameter 1 to be string, array given in &lt;b&gt;/var/www/html/test/1.php&lt;/b&gt; on line &lt;b&gt;4&lt;/b&gt;&lt;br /&gt;</code><br>​    if接受到错误信息就为假了（空信息）我已经思考不出来更好的答案了（确实也如此）<br><img src="https://i.loli.net/2020/11/10/wSXArbYkBh4liKI.png" alt="image.png"><br><img src="https://i.loli.net/2020/11/10/3LSflEg6PrkNnt2.png" alt="image.png"><br><img src="https://i.loli.net/2020/11/10/1D9pxO3LmS5QWol.png" alt="image.png"></p>
+<pre><code>关于strcmp函数详情可了解:
+https://www.php.net/manual/zh/function.strcmp.php</code></pre>
+]]></content>
+      <categories>
+        <category>PHP</category>
+        <category>web安全</category>
+      </categories>
+      <tags>
+        <tag>学习</tag>
+        <tag>记录</tag>
+      </tags>
+  </entry>
 </search>
