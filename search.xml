@@ -773,4 +773,31 @@
         <tag>记录</tag>
       </tags>
   </entry>
+  <entry>
+    <title>20201111-Mysql-基本操作</title>
+    <url>/2020/11/14/20201111-Mysql-%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/</url>
+    <content><![CDATA[<h1 id="20201111-Mysql-基本操作"><a href="#20201111-Mysql-基本操作" class="headerlink" title="20201111-Mysql-基本操作"></a>20201111-Mysql-基本操作</h1><p>环境：<br>    Centos7<br>    mariadb<br>启动数据库：<br>    <code>systemctl restart mariadb</code><br>链接数据库：<br>    <code>mysql -u root -p</code><br>创建数据库并分配全部权限到对应用户：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">database</span> php_test;</span><br><span class="line"><span class="comment">#创建一个名为php_test的数据库</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">user</span> phptest@localhost <span class="keyword">identified</span> <span class="keyword">by</span> <span class="string">&#x27;password&#x27;</span>;</span><br><span class="line"><span class="comment">#创建一个名为phptest的用户并且只能使用localhost进行链接，设置密码为password</span></span><br><span class="line"><span class="keyword">grant</span> <span class="keyword">ALL</span> <span class="keyword">on</span> php_test.* <span class="keyword">to</span> phptest@localhost;</span><br><span class="line"><span class="comment">#分配数据库all权限（完整权限）到phptest@localhost</span></span><br><span class="line"><span class="keyword">flush</span> <span class="keyword">privileges</span>;</span><br><span class="line"><span class="comment">#刷新数据库权限</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2020/11/11/yEhOcnxRgYQHSaW.png" alt="image.png"></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="keyword">user</span> </span><br><span class="line">(</span><br><span class="line">username <span class="built_in">VARCHAR</span>(<span class="number">40</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line"><span class="keyword">password</span> <span class="built_in">VARCHAR</span>(<span class="number">250</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span></span><br><span class="line">);</span><br><span class="line"><span class="comment">#NOT NULL 不允许为空</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2020/11/11/Vu39tB5s1PLXSOz.png" alt="image.png"></p>
+<p>删除数据库与表：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">DATABASE</span>  php_test;</span><br><span class="line"><span class="comment">#删除php_test数据库</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> <span class="keyword">user</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2020/11/11/XwydvPuQI6qtj1C.png" alt="image.png"></p>
+<p>插入数据：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">INSERT</span>  <span class="keyword">INTO</span>  <span class="keyword">user</span></span><br><span class="line">(username,<span class="keyword">password</span>)</span><br><span class="line"><span class="keyword">VALUES</span></span><br><span class="line">(<span class="string">&quot;admin&quot;</span>,<span class="string">&quot;password&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2020/11/13/UNrksK3lWuGoVwC.png" alt="image.png"></p>
+<p>简单的数据查询：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span>   <span class="keyword">user</span>;</span><br><span class="line"><span class="comment">#（*）为列名 ‘user’为表名</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p> <img src="https://i.loli.net/2020/11/13/L1PAQTWczkH6qVu.png" alt="image.png"></p>
+]]></content>
+      <categories>
+        <category>mysql</category>
+        <category>基础</category>
+      </categories>
+      <tags>
+        <tag>学习</tag>
+        <tag>mysql</tag>
+      </tags>
+  </entry>
 </search>
