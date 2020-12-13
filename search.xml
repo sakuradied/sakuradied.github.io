@@ -824,4 +824,47 @@ https://www.php.net/manual/zh/function.strcmp.php</code></pre>
         <tag>记录</tag>
       </tags>
   </entry>
+  <entry>
+    <title>20201312致远OA任意文件写入漏洞</title>
+    <url>/2020/12/14/20201312%E8%87%B4%E8%BF%9COA%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5%E6%BC%8F%E6%B4%9E/</url>
+    <content><![CDATA[<h1 id="20201312致远OA任意文件写入漏洞"><a href="#20201312致远OA任意文件写入漏洞" class="headerlink" title="20201312致远OA任意文件写入漏洞"></a>20201312致远OA任意文件写入漏洞</h1><p>一次渗透测试中遇到的环境，通过互联网找寻到的漏洞信息，在此进行记录</p>
+<p><strong>！！！本次环境均为内网测试环境，也并不包含任何敏感信息 ！！！</strong></p>
+<p>对环境进行简单的验证<code>/seeyon/htmlofficeservlet</code><br><img src="https://i.loli.net/2020/12/13/4OpfzbP3VHdR7G5.png" alt="image.png"></p>
+<p>漏洞利用：<br><img src="https://i.loli.net/2020/12/13/lqLyQwFEUT4SsAr.png" alt="image.png"></p>
+<p>在这里我的文件是上传成功了但是却返回mull，猜测可能是马儿有问题，但是时间问题没有做太多测试，仅仅在后期对加密方式进行了摸索最后在<a href="https://paper.seebug.org/964/">https://paper.seebug.org/964/</a> 找到了解密的方法</p>
+<p>Python脚本<br>解密脚本：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="comment">#sakuradied</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">en</span>(<span class="params">Str</span>):</span></span><br><span class="line">    code = <span class="string">&quot;&quot;&quot;gx74KW1roM9qwzPFVOBLSlYaeyncdNbI=JfUCQRHtj2+Z05vshXi3GAEuT/m8Dpk6&quot;&quot;&quot;</span></span><br><span class="line">    code1 = <span class="string">&quot;&quot;&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=&quot;&quot;&quot;</span></span><br><span class="line">    ii = <span class="number">0</span></span><br><span class="line">    w = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> a <span class="keyword">in</span> Str:</span><br><span class="line">        ii = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> b <span class="keyword">in</span> code:</span><br><span class="line">            <span class="keyword">if</span> a == b:</span><br><span class="line">                w = code1[ii] + w</span><br><span class="line">            ii = ii + <span class="number">1</span></span><br><span class="line">    b64 = (w[::<span class="number">-1</span>])</span><br><span class="line">    <span class="comment">#print(b64)</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        ba64 = base64.b64decode(b64)</span><br><span class="line">        print(ba64.decode())</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> err:</span><br><span class="line">        print(<span class="string">&quot;失败,请检查您输入的是否正确，错误信息为:&quot;</span>,err)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    Str = input(<span class="string">&quot;输入&gt;&gt;&quot;</span>)</span><br><span class="line">    Str = base64.b64encode(Str.encode(<span class="string">&#x27;utf-8&#x27;</span>))</span><br><span class="line">    Str = Str.decode()</span><br><span class="line">    en(Str)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>加密脚本：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python3 </span></span><br><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="comment">#sakuradied</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">en</span>(<span class="params">Str</span>):</span></span><br><span class="line">    code1 = <span class="string">&quot;&quot;&quot;gx74KW1roM9qwzPFVOBLSlYaeyncdNbI=JfUCQRHtj2+Z05vshXi3GAEuT/m8Dpk6&quot;&quot;&quot;</span></span><br><span class="line">    code = <span class="string">&quot;&quot;&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=&quot;&quot;&quot;</span></span><br><span class="line">    w=<span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> a <span class="keyword">in</span> Str:</span><br><span class="line">        ii = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> b <span class="keyword">in</span> code:</span><br><span class="line">            <span class="keyword">if</span> a == b:</span><br><span class="line">                w= w + code1[ii]</span><br><span class="line">            ii = ii +<span class="number">1</span></span><br><span class="line">    print(w)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    Str = input(<span class="string">&quot;输入&gt;&gt;&quot;</span>)</span><br><span class="line">    Str = base64.b64encode(Str.encode(<span class="string">&#x27;utf-8&#x27;</span>))</span><br><span class="line">    Str = Str.decode()</span><br><span class="line">    en(Str)</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+<p>这个是随便写的，挺乱的</p>
+<p>参考资料：<br><a href="https://paper.seebug.org/964/">https://paper.seebug.org/964/</a><br><a href="https://www.adminxe.com/1147.html">https://www.adminxe.com/1147.html</a></p>
+]]></content>
+      <categories>
+        <category>web安全</category>
+      </categories>
+      <tags>
+        <tag>学习</tag>
+        <tag>记录</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>20201312记最近</title>
+    <url>/2020/12/14/20201312%E8%AE%B0%E6%9C%80%E8%BF%91/</url>
+    <content><![CDATA[<h1 id="20201312记最近"><a href="#20201312记最近" class="headerlink" title="20201312记最近"></a>20201312记最近</h1><p>  好久没更新客文章了，一直处于学习还有工作的状态下，没啥时间写点什么了趁着晚上写点吧。</p>
+<p>  近自己开始一些公司的活了，也终于终于终于和自己喜欢上的人走在了一起，在这段时间内想的东西太多了，差不多那今2年内都做上了预估和判断，计划赶不上变化但在全局上还是得有一条规划吧，仔细想想还是自己太咸鱼了。</p>
+<p>  恩，已经不再去许下什么曾诺了，经后按照自己所想的向前走下去，不再只为自己了，开始认真的去学怎么与人交流沟通了。（一直在学，却没有太大的进步）</p>
+<p>  在探寻未知的路上前进从未停留</p>
+<p>恩，寫到現在出門拿外賣時又碰到了那隻貓，ta不怕我也不跑，給ta放下了兩塊雞肉，關門離去了。再開門的時候已經離去了，少了快肉。心中一直想著以前的那隻貓，不知道該如何去思考了，留下ta，把ta養起來看起來是個不錯的選擇，可ta已經離去了</p>
+<p>寫之前心裡想了很多，可在寫的時候卻並沒有寫下來的心了</p>
+]]></content>
+      <categories>
+        <category>记录</category>
+      </categories>
+      <tags>
+        <tag>记录</tag>
+        <tag>所思</tag>
+      </tags>
+  </entry>
 </search>
